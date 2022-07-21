@@ -29,5 +29,10 @@ class HomeController extends Controller
     public function select2()
     {
         return view('paginas.select2');
-    }    
+    }
+
+    public function select2Livewire()
+    {
+        return view('paginas.select2_livewire');
+    }     
 }

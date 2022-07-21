@@ -18,6 +18,9 @@
                         <li class="list-group-item">
                             1. <a href="{{ route('select2') }}">Estilos y configuración select2</a>
                         </li>
+                        <li class="list-group-item">
+                            2. <a href="{{ route('select2-livewire') }}">Componente Select2 Livewire</a>
+                        </li>
                     </ol>
                     
                 </div>

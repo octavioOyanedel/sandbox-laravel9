@@ -21,5 +21,5 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/select2', [App\Http\Controllers\HomeController::class, 'select2'])->name('select2');
-
+Route::get('/select2-livewire', [App\Http\Controllers\HomeController::class, 'select2Livewire'])->name('select2-livewire');
 
