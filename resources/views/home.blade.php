@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
+                <div class="card-header">{{ __('LISTA DE COMPONENTES') }}</div>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -14,7 +14,12 @@
                         </div>
                     @endif
 
-                    {{ __('You are logged in!') }}
+                    <ol class="list-group">
+                        <li class="list-group-item">
+                            1. <a href="{{ route('select2') }}">Estilos y configuración select2</a>
+                        </li>
+                    </ol>
+                    
                 </div>
             </div>
         </div>
