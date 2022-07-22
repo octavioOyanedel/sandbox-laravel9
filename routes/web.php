@@ -23,4 +23,5 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('/select2', [App\Http\Controllers\HomeController::class, 'select2'])->name('select2');
 Route::get('/select2-livewire', [App\Http\Controllers\HomeController::class, 'select2Livewire'])->name('select2-livewire');
 Route::get('/select2-livewire-componentes', [App\Http\Controllers\HomeController::class, 'select2LivewireCOmponentes'])->name('select2-livewire-componentes');
+Route::get('/tom-select', [App\Http\Controllers\HomeController::class, 'tomSelect'])->name('tom-select');
 
