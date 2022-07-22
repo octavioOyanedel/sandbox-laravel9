@@ -31,6 +31,13 @@
                                     <option value="WY">Wyoming</option>
                                 </select>
                             </div>
+                            <div class="mb-3">
+                                <label for="select2" class="form-label">Select2</label>
+                                <select class="form-control mi-select" name="state" id="select2">
+                                    <option value="AL">Alabama</option>
+                                    <option value="WY">Wyoming</option>
+                                </select>
+                            </div>                            
                             <button type="submit" class="btn btn-primary">Enviar</button>
                         </fieldset>
                     </form>

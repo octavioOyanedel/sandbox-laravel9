@@ -44,5 +44,10 @@ class HomeController extends Controller
     public function tomSelect()
     {
        return view('paginas.tom_select');
+    }
+
+    public function selectNormal()
+    {
+       return view('paginas.select_normal');
     } 
 }
