@@ -20,7 +20,10 @@
                         </li>
                         <li class="list-group-item">
                             2. <a href="{{ route('select2-livewire') }}">Componente Select2 Livewire</a>
-                        </li>
+                        </li>                        
+                        <li class="list-group-item">
+                            3. <a href="{{ route('select2-livewire-componentes') }}">Select2 Cascada 3 Niveles Livewire</a>
+                        </li>                        
                     </ol>
                     
                 </div>

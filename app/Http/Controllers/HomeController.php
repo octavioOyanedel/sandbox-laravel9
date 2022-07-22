@@ -34,5 +34,10 @@ class HomeController extends Controller
     public function select2Livewire()
     {
         return view('paginas.select2_livewire');
+    }
+
+    public function select2LivewireCOmponentes()
+    {
+        return view('paginas.select2_livewire_componentes');
     }     
 }
