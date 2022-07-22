@@ -1,14 +1,15 @@
 <div>
     {{-- Provincia --}}
-    {{ $key }}
     <div class="mb-3">
         <label for="selectProvincia" class="form-label">Provincia</label>
         <div wire:ignore>
             <select class="form-control mi-select select-provincia" name="state" id="selectProvincia">
                 <option value="">...</option>
-                {{-- @foreach($www as $id => $nombre)
-                    <option value={{$id}}>{{$nombre}}</option>
-                @endforeach --}}
+                @if($provincias)
+                    @foreach($provincias as $provincia)
+                        <option value={{$provincia->id}}>{{$provincia->nombre}}</option>
+                    @endforeach
+                @endif
             </select>
         </div>       
     </div>
