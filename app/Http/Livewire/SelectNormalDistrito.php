@@ -17,19 +17,25 @@ class SelectNormalDistrito extends Component
 
     public function updatedDistritoId($id)
     {
-        $this->emitUp('eDistritoHaciaForm', $id);
-        $this->emit('eDistritoHaciaProvincia', $id);
-
-        $this->emitTo('select-normal-comuna','xxx');
-
-        // switch botón nuevo
+        $this->emitUp('eventoLimpiarProvinciaComuna');
+        $this->emitTo('select-normal-provincia', 'eventoResetProvincias');
+        $this->emitTo('select-normal-comuna', 'eventoResetComunas');
         if($id != ""){
-            $this->emit('eActivarNuevaProvincia');                 
-        }else{
-            $this->emitUp('eLimpiarProvinciaComuna');
-            $this->emit('eDesactivarNuevaProvincia');
-            $this->emit('eDesactivarNuevaComuna');
+            $this->emitTo('select-normal-provincia', 'eventoCargarProvincias', $id);
+            $this->emitTo('select-normal-provincia', 'eventoActivarNuevaProvincia');
         }
+        $this->emitUp('eventoCargarDistritoEnForm', $id);
+    }
+
+    public function setearFormModal()
+    {
+        $parametros_modal = array(
+            'id' => 1,
+            'titulo' => 'Nueva Región',
+            'provincia' => '',
+            'comuna' => '',
+        );        
+        $this->emitTo('modal-nuevo-registro', 'datosModal', $parametros_modal);
     }
 
     public function render()

@@ -10,35 +10,45 @@ class SelectNormalComuna extends Component
     // estado inicial botón nuevo
     public $nueva_comuna = false;
 
-    public $comuna_id;
     public $comunas = array();
+    public $comuna_id;
 
     protected $listeners = [
-        'xxx' => '$refresh',
-        'eProvinciaHaciaComuna',
-        'eActivarNuevaComuna',
-        'eDesactivarNuevaComuna',
+        'eventoCargarComunas',
+        'eventoResetComunas',
+        'eventoActivarNuevaComuna'
     ];
 
-    public function eProvinciaHaciaComuna($id)
+    public function eventoCargarComunas($id)
     {
         $this->comunas = Comuna::where('provincia_id', $id)->pluck('nombre', 'id');
     }
 
-    public function updatedComunaId($id)
+    public function eventoResetComunas()
     {
-        $this->emitUp('eComunaHaciaForm', $id); // envia evento a componente padre
+        $this->reset();
     }
 
-    public function eActivarNuevaComuna()
+    public function updatedComunaId($id)
+    {
+        $this->comuna_id = $id;
+        $this->emitUp('eventoCargarComunaEnForm', $id);
+    }
+
+    public function eventoActivarNuevaComuna()
     {
         $this->nueva_comuna = true;
     }
 
-    public function eDesactivarNuevaComuna()
+    public function setearFormModal()
     {
-        $this->nueva_comuna = false;
-        $this->reset();
+        $parametros_modal = array(
+            'id' => 3,
+            'titulo' => 'Nueva Comuna',
+            'provincia' => '',
+            'comuna' => $this->comuna_id,
+        );        
+        $this->emitTo('modal-nuevo-registro', 'datosModal', $parametros_modal);
     }
 
     public function render()

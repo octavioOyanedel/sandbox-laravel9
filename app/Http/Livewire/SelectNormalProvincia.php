@@ -10,43 +10,52 @@ class SelectNormalProvincia extends Component
     // estado inicial botón nuevo
     public $nueva_provincia = false;
 
-    public $provincia_id;
     public $provincias = array();
+    public $provincia_id;
+
+    public $parametros_modal = array();
 
     protected $listeners = [
-        'eReiniciarProvinciaComuna' => '$refresh',
-        'eDistritoHaciaProvincia',
-        'eActivarNuevaProvincia',
-        'eDesactivarNuevaProvincia',
+        'eventoCargarProvincias',
+        'eventoResetProvincias',
+        'eventoActivarNuevaProvincia'
     ];
 
-    public function eDistritoHaciaProvincia($id)
+    public function eventoCargarProvincias($id)
     {
         $this->provincias = Provincia::where('distrito_id', $id)->pluck('nombre', 'id');
     } 
 
-    public function updatedProvinciaId($id)
+    public function eventoResetProvincias()
     {
-        $this->emitUp('eProvinciaHaciaForm', $id); // envia evento a componente padre
-        $this->emit('eProvinciaHaciaComuna', $id); // envía evento a demas componentes
-        // switch botón nuevo
-        if($id != ""){
-            $this->emit('eActivarNuevaComuna');
-        }else{
-            $this->emitUp('eLimpiarProvinciaComuna');
-            $this->emit('eDesactivarNuevaComuna');
-        }        
+        $this->reset();
     }
 
-    public function eActivarNuevaProvincia()
+    public function updatedProvinciaId($id)
+    {
+        $this->emitUp('eventoLimpiarComuna');
+        $this->emitTo('select-normal-comuna', 'eventoResetComunas');
+        if($id != ""){
+            $this->emitTo('select-normal-comuna', 'eventoCargarComunas', $id);
+            $this->emitTo('select-normal-comuna', 'eventoActivarNuevaComuna');
+        }
+        $this->emitUp('eventoCargarProvinciaEnForm', $id);
+    }
+
+    public function eventoActivarNuevaProvincia()
     {
         $this->nueva_provincia = true;
     }
 
-    public function eDesactivarNuevaProvincia()
+    public function setearFormModal()
     {
-        $this->nueva_provincia = false;
-        $this->reset();
+        $parametros_modal = array(
+             'id' => 2,
+             'titulo' => 'Nueva Provincia',
+             'provincia' => $this->provincia_id,
+             'comuna' => '',
+        );
+        $this->emitTo('modal-nuevo-registro', 'datosModal', $parametros_modal);
     }
 
     public function render()

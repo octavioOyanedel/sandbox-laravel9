@@ -11,10 +11,11 @@ class FormSelectNivel3 extends Component
     public $comuna_id;
 
     protected $listeners = [
-        'eDistritoHaciaForm',
-        'eProvinciaHaciaForm',
-        'eComunaHaciaForm',
-        'eLimpiarProvinciaComuna'
+        'eventoCargarDistritoEnForm',
+        'eventoCargarProvinciaEnForm',
+        'eventoCargarComunaEnForm',
+        'eventoLimpiarProvinciaComuna',
+        'eventoLimpiarComuna'
     ];
 
     public function render()
@@ -22,23 +23,27 @@ class FormSelectNivel3 extends Component
         return view('livewire.form-select-nivel3');
     }
 
-    public function eDistritoHaciaForm($id)
+    public function eventoCargarDistritoEnForm($id)
     {
         $this->distrito_id = $id;
     }
 
-    public function eProvinciaHaciaForm($id)
+    public function eventoCargarProvinciaEnForm($id)
     {
         $this->provincia_id = $id;
     }
 
-    public function eComunaHaciaForm($id)
+    public function eventoCargarComunaEnForm($id)
     {
         $this->comuna_id = $id;
     }
 
-    public function eLimpiarProvinciaComuna()
+    public function eventoLimpiarComuna()
+    {
+        $this->reset('comuna_id');
+    }
+    public function eventoLimpiarProvinciaComuna()
     {
         $this->reset(['provincia_id', 'comuna_id']);
-    }
+    }    
 }
