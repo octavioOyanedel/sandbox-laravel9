@@ -13,7 +13,8 @@ class FormSelectNivel3 extends Component
     protected $listeners = [
         'eDistritoHaciaForm',
         'eProvinciaHaciaForm',
-        'eComunaHaciaForm'
+        'eComunaHaciaForm',
+        'eLimpiarProvinciaComuna'
     ];
 
     public function render()
@@ -34,5 +35,10 @@ class FormSelectNivel3 extends Component
     public function eComunaHaciaForm($id)
     {
         $this->comuna_id = $id;
+    }
+
+    public function eLimpiarProvinciaComuna()
+    {
+        $this->reset(['provincia_id', 'comuna_id']);
     }
 }

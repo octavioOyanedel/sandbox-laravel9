@@ -7,10 +7,18 @@ use App\Models\Provincia;
 
 class SelectNormalProvincia extends Component
 {
+    // estado inicial botón nuevo
+    public $nueva_provincia = false;
+
     public $provincia_id;
     public $provincias = array();
 
-    protected $listeners = ['eDistritoHaciaProvincia'];
+    protected $listeners = [
+        'eReiniciarProvinciaComuna' => '$refresh',
+        'eDistritoHaciaProvincia',
+        'eActivarNuevaProvincia',
+        'eDesactivarNuevaProvincia',
+    ];
 
     public function eDistritoHaciaProvincia($id)
     {
@@ -21,6 +29,24 @@ class SelectNormalProvincia extends Component
     {
         $this->emitUp('eProvinciaHaciaForm', $id); // envia evento a componente padre
         $this->emit('eProvinciaHaciaComuna', $id); // envía evento a demas componentes
+        // switch botón nuevo
+        if($id != ""){
+            $this->emit('eActivarNuevaComuna');
+        }else{
+            $this->emitUp('eLimpiarProvinciaComuna');
+            $this->emit('eDesactivarNuevaComuna');
+        }        
+    }
+
+    public function eActivarNuevaProvincia()
+    {
+        $this->nueva_provincia = true;
+    }
+
+    public function eDesactivarNuevaProvincia()
+    {
+        $this->nueva_provincia = false;
+        $this->reset();
     }
 
     public function render()

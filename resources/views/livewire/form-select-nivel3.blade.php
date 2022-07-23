@@ -1,6 +1,6 @@
 <div>
     <form>
-        <p>{{$distrito_id}} - {{$provincia_id}} - {{$comuna_id}}</p>
+        <p>Componente padre: {{$distrito_id}} - {{$provincia_id}} - {{$comuna_id}}</p>
         @livewire('select-normal-distrito')
         @livewire('select-normal-provincia')
         @livewire('select-normal-comuna')
@@ -9,3 +9,5 @@
         </div>                      
     </form>
 </div>
+
+@livewire('modal-nuevo-registro')
