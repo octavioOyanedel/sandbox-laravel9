@@ -10,7 +10,7 @@
                 <div class="modal-body">
                     <div class="input-group mb-3">
                       <span class="input-group-text" id="inputGroup-sizing-default"><i class="fa-solid fa-location-dot"></i></span>
-                      <input wire:model="nombre" type="text" class="form-control @error('nombre') is-invalid @enderror" placeholder="Nombre"> 
+                      <input wire:model="nombre" id="inputModalNuevoRegistro" type="text" class="form-control @error('nombre') is-invalid @enderror" placeholder="Nombre"> 
                     </div>
                     @error('nombre')
                         <small class="ms-2 text-danger fw-bolder fst-italic">Error: {{$message}}</small>
@@ -24,3 +24,8 @@
         </div>
     </div>
 </div>
+@push('scripts')
+    <script type="text/javascript">
+        document.getElementById("inputModalNuevoRegistro").focus()
+    </script>
+@endpush

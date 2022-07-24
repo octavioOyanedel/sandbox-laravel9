@@ -7,9 +7,10 @@ use App\Models\Distrito;
 
 class SelectNormalDistrito extends Component
 {
-    public $distritos = array();
+    public $distritos;
     public $distrito_id;
     public $identificador = 0;
+    public $arreglo_filtrado = array();
 
     protected $listeners = [
         'eventoRefreshDistrito',
@@ -22,12 +23,29 @@ class SelectNormalDistrito extends Component
 
     public function cargarDistritos($id)
     {
-        // identificador = 0: proviene de carga inicial
-        // identificador > 0: id nuevo registro, se agregó nuevo distrito
         ($id > 0) ? $this->identificador = $id : $this->identificador = 0;
-        // $this->distritos = Distrito::orderBy('id', 'desc')->pluck('nombre', 'id')->dd();
-        // $this->distritos = Distrito::orderBy('id', 'desc')->pluck('nombre', 'id');
-        $this->distritos = Distrito::orderBy('id', 'desc')->get();
+        // carga de distritos inicial (mount)
+        if($id === 0){
+            $this->distritos = Distrito::orderBy('nombre', 'asc')->get();
+            $arreglo = $this->distritos->toarray();
+            $this->arreglo_filtrado = $this->filtrarRegistrosSelect($arreglo);
+        }else{
+            $this->distritos = Distrito::where('id','<>', $id)->orderBy('nombre', 'asc')->get();
+            $last = Distrito::findOrFail($id)->toarray();
+            $arreglo = $this->distritos->toarray(); // genera un array de arrays            
+            array_unshift($arreglo, $last);
+            // dd(count($arreglo));
+            $this->arreglo_filtrado = $this->filtrarRegistrosSelect($arreglo);
+        }
+    }
+
+    public function filtrarRegistrosSelect(&$arreglo)
+    {
+        foreach ($arreglo as $x => &$value) {          
+            unset($value["created_at"]);
+            unset($value['updated_at']);
+        }
+        return $arreglo;
     }
 
     public function updatedDistritoId($id)
@@ -51,6 +69,7 @@ class SelectNormalDistrito extends Component
             'comuna' => '',
         );        
         $this->emitTo('modal-nuevo-registro', 'datosModal', $parametros_modal);
+
     }
 
     public function eventoRefreshDistrito($id)
