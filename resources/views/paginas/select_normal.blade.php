@@ -22,3 +22,34 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+    <script type="text/javascript">
+        window.livewire.on('eventoCerrarModal', () => {
+            $('#modalNuevoRegistro').modal('hide');
+        })
+    </script>
+    <script type="text/javascript">
+        window.livewire.on('eventoRegionAgregada', texto => {
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": true,
+                "positionClass": "toast-top-center",
+                // "positionClass": "toast-top-right",
+                "preventDuplicates": true,
+                "onclick": null,
+                "showDuration": "1000",
+                "hideDuration": "1000",
+                "timeOut": "2300",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+            toastr["success"](texto);
+        });
+    </script>    
+@endpush

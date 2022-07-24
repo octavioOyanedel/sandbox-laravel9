@@ -9,10 +9,25 @@ class SelectNormalDistrito extends Component
 {
     public $distritos = array();
     public $distrito_id;
+    public $identificador = 0;
+
+    protected $listeners = [
+        'eventoRefreshDistrito',
+    ];
 
     public function mount()
     {
-        $this->distritos = Distrito::all()->pluck('nombre', 'id');
+        $this->cargarDistritos(0);
+    }
+
+    public function cargarDistritos($id)
+    {
+        // identificador = 0: proviene de carga inicial
+        // identificador > 0: id nuevo registro, se agregó nuevo distrito
+        ($id > 0) ? $this->identificador = $id : $this->identificador = 0;
+        // $this->distritos = Distrito::orderBy('id', 'desc')->pluck('nombre', 'id')->dd();
+        // $this->distritos = Distrito::orderBy('id', 'desc')->pluck('nombre', 'id');
+        $this->distritos = Distrito::orderBy('id', 'desc')->get();
     }
 
     public function updatedDistritoId($id)
@@ -36,6 +51,11 @@ class SelectNormalDistrito extends Component
             'comuna' => '',
         );        
         $this->emitTo('modal-nuevo-registro', 'datosModal', $parametros_modal);
+    }
+
+    public function eventoRefreshDistrito($id)
+    {
+        $this->cargarDistritos($id);
     }
 
     public function render()

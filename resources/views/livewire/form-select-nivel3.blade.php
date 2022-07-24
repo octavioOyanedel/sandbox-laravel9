@@ -8,6 +8,6 @@
             <button class="btn btn-outline-primary" type="button">Enviar</button>
         </div>                      
     </form>
-</div>
 
-@livewire('modal-nuevo-registro')
+    @livewire('modal-nuevo-registro')
+</div>
