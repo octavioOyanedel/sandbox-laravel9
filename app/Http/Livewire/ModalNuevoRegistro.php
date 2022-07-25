@@ -10,6 +10,7 @@ class ModalNuevoRegistro extends Component
 {
     // variables a guardar
     public $nombre;
+    public $distrito_id;
 
     public $identificador;
     public $titulo;
@@ -72,13 +73,31 @@ class ModalNuevoRegistro extends Component
         $this->emitTo('select-normal-distrito', 'eventoRefreshDistrito', $distrito->id);
 
         // Envío de mensaje toastr
-        $texto = "Region ".$distrito->nombre." añadida correctamente.";
-        $this->emit('eventoRegionAgregada', $texto); 
+        $texto = "Región ".$distrito->nombre." añadida correctamente.";
+        $this->emit('eventoRegistroAgregado', $texto); 
     }
 
     public function guardarProvincia()
     {
-        dd('save provincia');
+        // reglas de validación
+        $this->validate([
+            'nombre' => ['required', new Nombre, 'unique:provincias,nombre'],
+        ]);
+
+        $provincia = Provincia::create([
+            'nombre' => $this->nombre,
+            'distrito_id' => $this->distrito_id
+        ]);
+
+        // Cerrar ventana modal
+        $this->emit('eventoCerrarModal');
+
+        // Carga de nuevo registro y desplegarlo como seleccionado
+        $this->emitTo('select-normal-provincia', 'eventoRefreshProvincia', $provincia->id);
+
+        // Envío de mensaje toastr
+        $texto = "Provincia ".$provincia->nombre." añadida correctamente.";
+        $this->emit('eventoRegistroAgregado', $texto); 
     }
 
     public function guardarComuna()

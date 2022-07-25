@@ -14,6 +14,7 @@
                         </div>
                     @endif
                     {{-- inicio form select --}}
+                    {{test()}}
                     @livewire('form-select-nivel3')
                     {{-- fin form select --}}
                 </div>
@@ -30,7 +31,7 @@
         })
     </script>
     <script type="text/javascript">
-        window.livewire.on('eventoRegionAgregada', texto => {
+        window.livewire.on('eventoRegistroAgregado', texto => {
             toastr.options = {
                 "closeButton": false,
                 "debug": false,

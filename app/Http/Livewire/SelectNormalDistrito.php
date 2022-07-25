@@ -7,9 +7,8 @@ use App\Models\Distrito;
 
 class SelectNormalDistrito extends Component
 {
-    public $distritos;
     public $distrito_id;
-    public $identificador = 0;
+    public $option_inicial = 0;
     public $arreglo_filtrado = array();
 
     protected $listeners = [
@@ -23,29 +22,20 @@ class SelectNormalDistrito extends Component
 
     public function cargarDistritos($id)
     {
-        ($id > 0) ? $this->identificador = $id : $this->identificador = 0;
-        // carga de distritos inicial (mount)
+        $eliminar = array('created_at', 'updated_at'); // campos a filtrar
+        ($id > 0) ? $this->option_inicial = $id : $this->option_inicial = 0;
         if($id === 0){
-            $this->distritos = Distrito::orderBy('nombre', 'asc')->get();
-            $arreglo = $this->distritos->toarray();
-            $this->arreglo_filtrado = $this->filtrarRegistrosSelect($arreglo);
+            $distritos = Distrito::orderBy('nombre', 'asc')->get()->toarray();
+            $this->arreglo_filtrado = filtrarArregloParaSelect($distritos, $eliminar);
+        // caso contrario, todos los registros excepto último
         }else{
-            $this->distritos = Distrito::where('id','<>', $id)->orderBy('nombre', 'asc')->get();
-            $last = Distrito::findOrFail($id)->toarray();
-            $arreglo = $this->distritos->toarray(); // genera un array de arrays            
-            array_unshift($arreglo, $last);
-            // dd(count($arreglo));
-            $this->arreglo_filtrado = $this->filtrarRegistrosSelect($arreglo);
+            $distritos = Distrito::where('id','<>', $id)->orderBy('nombre', 'asc')->get()->toarray();
+            $ultimo = Distrito::findOrFail($id)->toarray();
+            array_unshift($distritos, $ultimo);
+            $this->arreglo_filtrado = filtrarArregloParaSelect($distritos, $eliminar);
+            $this->emitTo('select-normal-provincia', 'eventoActivarNuevaProvincia');
+            $this->emitUp('eventoCargarDistritoEnForm', $id);
         }
-    }
-
-    public function filtrarRegistrosSelect(&$arreglo)
-    {
-        foreach ($arreglo as $x => &$value) {          
-            unset($value["created_at"]);
-            unset($value['updated_at']);
-        }
-        return $arreglo;
     }
 
     public function updatedDistritoId($id)
