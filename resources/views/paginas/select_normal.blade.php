@@ -14,7 +14,7 @@
                         </div>
                     @endif
                     {{-- inicio form select --}}
-                    {{test()}}
+                    {{-- {{test()}} --}}
                     @livewire('form-select-nivel3')
                     {{-- fin form select --}}
                 </div>

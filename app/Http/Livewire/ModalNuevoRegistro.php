@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Rules\Nombre;
 use Livewire\Component;
 use App\Models\Distrito;
+use App\Models\Provincia;
 
 class ModalNuevoRegistro extends Component
 {
@@ -14,6 +15,7 @@ class ModalNuevoRegistro extends Component
 
     public $identificador;
     public $titulo;
+    public $distrito;
     public $provincia;
     public $comuna;
 
@@ -50,6 +52,7 @@ class ModalNuevoRegistro extends Component
         $this->resetErrorBag();
         $this->resetValidation();
         $this->identificador = $parametros['id'];
+        $this->distrito = $parametros['distrito'];
         $this->titulo = $parametros['titulo'];
         $this->provincia = $parametros['provincia'];
         $this->comuna = $parametros['comuna'];
@@ -75,6 +78,8 @@ class ModalNuevoRegistro extends Component
         // Envío de mensaje toastr
         $texto = "Región ".$distrito->nombre." añadida correctamente.";
         $this->emit('eventoRegistroAgregado', $texto); 
+
+
     }
 
     public function guardarProvincia()
@@ -86,7 +91,7 @@ class ModalNuevoRegistro extends Component
 
         $provincia = Provincia::create([
             'nombre' => $this->nombre,
-            'distrito_id' => $this->distrito_id
+            'distrito_id' => $this->distrito
         ]);
 
         // Cerrar ventana modal

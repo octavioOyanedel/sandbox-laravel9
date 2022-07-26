@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Livewire;
 
 use Livewire\Component;
@@ -26,6 +25,7 @@ class FormSelectNivel3 extends Component
     public function eventoCargarDistritoEnForm($id)
     {
         $this->distrito_id = $id;
+        $this->emitTo('select-normal-provincia', 'eventoEnviarDistritoParaModal', $id);
     }
 
     public function eventoCargarProvinciaEnForm($id)

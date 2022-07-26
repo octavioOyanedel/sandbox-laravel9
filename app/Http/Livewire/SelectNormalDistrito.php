@@ -55,6 +55,7 @@ class SelectNormalDistrito extends Component
         $parametros_modal = array(
             'id' => 1,
             'titulo' => 'Nueva Región',
+            'distrito' => '',
             'provincia' => '',
             'comuna' => '',
         );        

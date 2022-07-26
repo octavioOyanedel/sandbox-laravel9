@@ -7,8 +7,8 @@
             @if($option_inicial === 0)
                 <option value="">Región ...</option>
             @endif
-            @foreach($arreglo_filtrado as $key => $distrito)            
-                <option value="{{$distrito['id']}}" wire:key="{{ $distrito['id'] }}">{{ $distrito['nombre'] }}</option>
+            @foreach($arreglo_filtrado as $key => $item)            
+                <option value="{{$item['id']}}" wire:key="{{ $item['id'] }}">{{ $item['nombre'] }}</option>
             @endforeach
             @if($option_inicial != 0)
                 <option value="">Región ...</option>
