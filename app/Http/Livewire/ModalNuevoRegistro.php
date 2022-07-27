@@ -19,6 +19,9 @@ class ModalNuevoRegistro extends Component
     public $provincia;
     public $comuna;
 
+    // nombre antecesor para nueva provincia en formulario modal
+    public $nombre_distrito;
+
     protected $listeners = ['datosModal'];
 
     protected $messages = [
@@ -56,6 +59,10 @@ class ModalNuevoRegistro extends Component
         $this->titulo = $parametros['titulo'];
         $this->provincia = $parametros['provincia'];
         $this->comuna = $parametros['comuna'];
+
+        if($this->distrito){
+            $this->nombre_distrito = Distrito::findOrFail($this->distrito)->nombre;
+        }
     }
 
     public function guardarDistrito()

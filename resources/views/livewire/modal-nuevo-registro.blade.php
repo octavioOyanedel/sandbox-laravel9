@@ -8,6 +8,12 @@
                     <button wire:click="limpiarModal" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    @if($identificador === 2)
+                        <div class="input-group mb-3">
+                          <span class="input-group-text" id="inputGroup-sizing-default"><i class="fa-solid fa-location-dot"></i></span>
+                          <input id="inputModalpROVINCIA" type="text" class="form-control" value="Región: {{$nombre_distrito}}" disabled> 
+                        </div>
+                    @endif
                     <div class="input-group mb-3">
                       <span class="input-group-text" id="inputGroup-sizing-default"><i class="fa-solid fa-location-dot"></i></span>
                       <input wire:model="nombre" id="inputModalNuevoRegistro" type="text" class="form-control @error('nombre') is-invalid @enderror" placeholder="Nombre"> 
