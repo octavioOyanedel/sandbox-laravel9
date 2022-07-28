@@ -5,45 +5,41 @@ use Livewire\Component;
 
 class FormSelectNivel3 extends Component
 {
-    public $distrito_id;
-    public $provincia_id;
-    public $comuna_id;
+    public $distrito;
+    public $provincia;
+    public $comuna;
 
     protected $listeners = [
-        'eventoCargarDistritoEnForm',
-        'eventoCargarProvinciaEnForm',
-        'eventoCargarComunaEnForm',
-        'eventoLimpiarProvinciaComuna',
-        'eventoLimpiarComuna'
+        'eventoEnviarDistritoHaciaForm',
+        'eventoEnviarProvinciaHaciaForm'
     ];
+
+    public function eventoEnviarDistritoHaciaForm($id)
+    {
+        $this->resetDistrito();
+        $this->resetProvincia();
+        $this->distrito = $id;
+    }
+
+    public function eventoEnviarProvinciaHaciaForm($id)
+    {
+        $this->resetProvincia();
+        $this->provincia = $id;
+    }
+
+    public function resetDistrito()
+    {
+        $this->reset('distrito');
+    }
+
+    public function resetProvincia()
+    {
+        $this->reset('provincia');
+    }
 
     public function render()
     {
         return view('livewire.form-select-nivel3');
     }
 
-    public function eventoCargarDistritoEnForm($id)
-    {
-        $this->distrito_id = $id;
-        $this->emitTo('select-normal-provincia', 'eventoEnviarDistritoParaModal', $id);
-    }
-
-    public function eventoCargarProvinciaEnForm($id)
-    {
-        $this->provincia_id = $id;
-    }
-
-    public function eventoCargarComunaEnForm($id)
-    {
-        $this->comuna_id = $id;
-    }
-
-    public function eventoLimpiarComuna()
-    {
-        $this->reset('comuna_id');
-    }
-    public function eventoLimpiarProvinciaComuna()
-    {
-        $this->reset(['provincia_id', 'comuna_id']);
-    }    
 }

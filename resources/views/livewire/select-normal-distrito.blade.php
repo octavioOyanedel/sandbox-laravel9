@@ -3,17 +3,17 @@
         <span class="input-group-text">
             <i class="fa-solid fa-location-dot"></i>
         </span>
-        <select wire:model.lazy="distrito_id" class="form-select">
-            @if($option_inicial === 0)
+        <select wire:model.lazy="distrito" class="form-select" >
+            @if($posicion_default_option)
                 <option value="">Región ...</option>
             @endif
-            @foreach($arreglo_filtrado as $key => $item)            
+            @foreach($arreglo as $key => $item)            
                 <option value="{{$item['id']}}" wire:key="{{ $item['id'] }}">{{ $item['nombre'] }}</option>
             @endforeach
-            @if($option_inicial != 0)
+            @if(!$posicion_default_option)
                 <option value="">Región ...</option>
             @endif
         </select>
-        <button wire:click="setearFormModal" class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#modalNuevoRegistro"><i class="fa-solid fa-plus"></i></button>
+        <button wire:click="enviarDatosHaciaModal" class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#modalNuevoRegistro"><i class="fa-solid fa-plus"></i></button>
     </div> 
 </div>

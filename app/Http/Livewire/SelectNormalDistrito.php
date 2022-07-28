@@ -7,65 +7,95 @@ use App\Models\Distrito;
 
 class SelectNormalDistrito extends Component
 {
-    public $distrito_id;
-    public $option_inicial = 0;
-    public $arreglo_filtrado = array();
+    // atributos select
+    public $distrito;
+    public $arreglo = array();
+    public $posicion_default_option = true; // true = up, false = down
 
     protected $listeners = [
-        'eventoRefreshDistrito',
+        'eventoCargarRegistro'
     ];
 
+    // carga de registros al montar componente
     public function mount()
     {
-        $this->cargarDistritos(0);
+        $this->poblarSelect();
     }
 
-    public function cargarDistritos($id)
+    // 1. poblar select 
+    public function poblarSelect($id = 0)
     {
-        $eliminar = array('created_at', 'updated_at'); // campos a filtrar
-        ($id > 0) ? $this->option_inicial = $id : $this->option_inicial = 0;
+        $eliminar = array('created_at', 'updated_at');
+        // evita problema de no carga de ultimo si hay un update previo
+        $this->resetAntesDePoblar();
+        // si $id === 0 -> mount, sino -> post agregar nuevo
         if($id === 0){
             $distritos = Distrito::orderBy('nombre', 'asc')->get()->toarray();
-            $this->arreglo_filtrado = filtrarArregloParaSelect($distritos, $eliminar);
-        // caso contrario, todos los registros excepto último
+            $this->posicion_default_option = true;
+            $this->arreglo = filtrarArregloParaSelect($distritos, $eliminar);
         }else{
-            $distritos = Distrito::where('id','<>', $id)->orderBy('nombre', 'asc')->get()->toarray();
+            $distritos = Distrito::where('id', '<>', $id)->orderBy('nombre', 'asc')->get()->toarray();
             $ultimo = Distrito::findOrFail($id)->toarray();
             array_unshift($distritos, $ultimo);
-            $this->arreglo_filtrado = filtrarArregloParaSelect($distritos, $eliminar);
-            $this->emitTo('select-normal-provincia', 'eventoActivarNuevaProvincia');
-            $this->emitUp('eventoCargarDistritoEnForm', $id);
+            $this->posicion_default_option = false;
+            $this->arreglo = filtrarArregloParaSelect($distritos, $eliminar);
+            $this->activarModuloProvincia($id);
+            $this->enviarRegistroHaciaForm($id);
         }
     }
 
-    public function updatedDistritoId($id)
+    // 2. comportamiento tras seleccionar registro
+    public function updatedDistrito($id)
     {
-        $this->emitUp('eventoLimpiarProvinciaComuna');
-        $this->emitTo('select-normal-provincia', 'eventoResetProvincias');
-        $this->emitTo('select-normal-comuna', 'eventoResetComunas');
+        // solo si se selecciona elemeto no vacío (default option)
         if($id != ""){
-            $this->emitTo('select-normal-provincia', 'eventoCargarProvincias', $id);
-            $this->emitTo('select-normal-provincia', 'eventoActivarNuevaProvincia');
+            // bloque eventos a siguiente select
+            $this->activarModuloProvincia($id);
         }
-        $this->emitUp('eventoCargarDistritoEnForm', $id);
+        // bloque eventos reset hacia los siguientes selects
+        $this->resetSelectsDependientes();
+        //bloque eventos hacia form
+        $this->enviarRegistroHaciaForm($id);
     }
 
-    public function setearFormModal()
+    // 3. envío de parametros para completar ventane modal
+    public function enviarDatosHaciaModal()
     {
-        $parametros_modal = array(
-            'id' => 1,
+        $parametros = array(
+            'select' => 'distrito',
             'titulo' => 'Nueva Región',
-            'distrito' => '',
-            'provincia' => '',
-            'comuna' => '',
-        );        
-        $this->emitTo('modal-nuevo-registro', 'datosModal', $parametros_modal);
-
+            'distrito' => '',            
+            'provincia' => '',            
+            'comuna' => '',            
+        );
+        $this->emitTo('modal-nuevo-registro', 'eventoParametrosModal', $parametros);
     }
 
-    public function eventoRefreshDistrito($id)
+    // 4. carga de distritos, más ultimo almacenado
+    public function eventoCargarRegistro($id)
     {
-        $this->cargarDistritos($id);
+        $this->poblarSelect($id);
+    }
+
+    public function activarModuloProvincia($id)
+    {
+        $this->emitTo('select-normal-provincia', 'eventoActivarModuloProvincia', $id);
+    }
+
+    public function resetSelectsDependientes()
+    {
+        $this->emitTo('select-normal-provincia', 'eventoResetProvincia');
+        $this->emitTo('select-normal-comuna', 'eventoResetComuna');
+    }
+
+    public function enviarRegistroHaciaForm($id)
+    {
+        $this->emitUp('eventoEnviarDistritoHaciaForm', $id);
+    }
+
+    public function resetAntesDePoblar()
+    {
+        $this->reset();
     }
 
     public function render()

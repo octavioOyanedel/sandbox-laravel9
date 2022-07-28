@@ -31,7 +31,7 @@
         })
     </script>
     <script type="text/javascript">
-        window.livewire.on('eventoRegistroAgregado', texto => {
+        window.livewire.on('eventoMensajeFinal', texto => {
             toastr.options = {
                 "closeButton": false,
                 "debug": false,
