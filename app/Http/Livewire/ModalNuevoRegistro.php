@@ -25,8 +25,8 @@ class ModalNuevoRegistro extends Component
         $this->titulo = $parametros['titulo'];
         $this->select = $parametros['select'];
         $this->distrito = $parametros['distrito'];
-        // $this->$provincia = $parametros['provincia'];
-        // $this->$comuna = $parametros['comuna'];
+        $this->provincia = $parametros['provincia'];
+        $this->comuna = $parametros['comuna'];
         if($parametros['select'] === 'provincia'){
             $this->nombre_distrito = Distrito::findOrFail($parametros['distrito'])->nombre;
         }
@@ -46,10 +46,10 @@ class ModalNuevoRegistro extends Component
                 ]);
                 $nombre = $distrito->nombre;
                 $mensaje = 'Región '.$nombre.' añadida correctamente.';
-                $this->cargarRegistroGuardado($distrito->id, $this->select);
+                $this->cargarRegistroGuardadoDistrito($distrito->id, $this->select);
                 break;
             case 'provincia':
-                /*$this->validate([
+                $this->validate([
                     'nombre' => ['required', new Nombre, 'unique:provincias,nombre'],
                 ]);
                 $provincia = Provincia::create([
@@ -58,16 +58,22 @@ class ModalNuevoRegistro extends Component
                 ]);
                 $nombre = $provincia->nombre;
                 $mensaje = 'Provincia '.$nombre.' añadida correctamente.';
-                $this->cargarRegistroGuardado($this->distrito, $provincia->id, 0, $this->select);*/
+                $this->cargarRegistroGuardadoProvincia($provincia->id, $this->select);
                 break;                
         }
         $this->procesoFinalizado($mensaje);
     }
     
-    // 3. cargar en select último registro almacenado 
-    public function cargarRegistroGuardado($id, $select)
+    // 3. cargar en select último registro almacenado distrito
+    public function cargarRegistroGuardadoDistrito($distrito_id, $select)
     {
-        $this->emitTo('select-normal-'.$select, 'eventoCargarRegistro', $id);
+        $this->emitTo('select-normal-'.$select, 'eventoCargarRegistro', $distrito_id);
+    }
+
+    // 4. cargar en select último registro almacenado provincia
+    public function cargarRegistroGuardadoProvincia($provincia_id, $select)
+    {
+        $this->emitTo('select-normal-'.$select, 'eventoCargarRegistro', $provincia_id);
     }
 
     public function procesoFinalizado($mensaje)

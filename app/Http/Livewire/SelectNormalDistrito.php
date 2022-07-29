@@ -23,24 +23,24 @@ class SelectNormalDistrito extends Component
     }
 
     // 1. poblar select 
-    public function poblarSelect($id = 0)
+    public function poblarSelect($distrito_id = 0, $post_guardar = false)
     {
         $eliminar = array('created_at', 'updated_at');
         // evita problema de no carga de ultimo si hay un update previo
         $this->resetAntesDePoblar();
-        // si $id === 0 -> mount, sino -> post agregar nuevo
-        if($id === 0){
+        // si $post_guardar === false y $distrito_id === 0 -> mount, sino -> post agregar nuevo
+        if(!$post_guardar and $distrito_id === 0){
             $distritos = Distrito::orderBy('nombre', 'asc')->get()->toarray();
             $this->posicion_default_option = true;
             $this->arreglo = filtrarArregloParaSelect($distritos, $eliminar);
         }else{
-            $distritos = Distrito::where('id', '<>', $id)->orderBy('nombre', 'asc')->get()->toarray();
-            $ultimo = Distrito::findOrFail($id)->toarray();
+            $distritos = Distrito::where('id', '<>', $distrito_id)->orderBy('nombre', 'asc')->get()->toarray();
+            $ultimo = Distrito::findOrFail($distrito_id)->toarray();
             array_unshift($distritos, $ultimo);
             $this->posicion_default_option = false;
             $this->arreglo = filtrarArregloParaSelect($distritos, $eliminar);
-            $this->activarModuloProvincia($id);
-            $this->enviarRegistroHaciaForm($id);
+            $this->activarModuloProvincia($distrito_id);
+            $this->enviarRegistroHaciaForm($distrito_id);
         }
     }
 
@@ -51,11 +51,12 @@ class SelectNormalDistrito extends Component
         if($id != ""){
             // bloque eventos a siguiente select
             $this->activarModuloProvincia($id);
+            //bloque eventos hacia form
+            $this->enviarRegistroHaciaForm($id);
+        }else{
+            // bloque eventos reset hacia los siguientes selects
+            $this->resetSelectsDependientes();            
         }
-        // bloque eventos reset hacia los siguientes selects
-        $this->resetSelectsDependientes();
-        //bloque eventos hacia form
-        $this->enviarRegistroHaciaForm($id);
     }
 
     // 3. envío de parametros para completar ventane modal
@@ -74,7 +75,7 @@ class SelectNormalDistrito extends Component
     // 4. carga de distritos, más ultimo almacenado
     public function eventoCargarRegistro($id)
     {
-        $this->poblarSelect($id);
+        $this->poblarSelect($id, true);
     }
 
     public function activarModuloProvincia($id)
