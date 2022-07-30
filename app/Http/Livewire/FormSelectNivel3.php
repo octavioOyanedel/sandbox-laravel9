@@ -11,30 +11,34 @@ class FormSelectNivel3 extends Component
 
     protected $listeners = [
         'eventoEnviarDistritoHaciaForm',
-        'eventoEnviarProvinciaHaciaForm'
+        'eventoEnviarProvinciaHaciaForm',
+        'eventoEnviarComunaHaciaForm',
+        'eventoResetDisProCom'
     ];
+
+    // eventos
+
+    public function eventoResetDisProCom()
+    {
+        $this->reset();
+    }
 
     public function eventoEnviarDistritoHaciaForm($id)
     {
-        $this->resetDistrito();
-        $this->resetProvincia();
+        $this->reset('distrito');
         $this->distrito = $id;
     }
 
     public function eventoEnviarProvinciaHaciaForm($id)
     {
-        $this->resetProvincia();
+        $this->reset('provincia');
         $this->provincia = $id;
     }
 
-    public function resetDistrito()
+    public function eventoEnviarComunaHaciaForm($id)
     {
-        $this->reset('distrito');
-    }
-
-    public function resetProvincia()
-    {
-        $this->reset('provincia');
+        $this->reset('comuna');
+        $this->comuna = $id;
     }
 
     public function render()

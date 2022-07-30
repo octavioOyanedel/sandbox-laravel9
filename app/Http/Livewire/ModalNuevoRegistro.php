@@ -3,33 +3,33 @@
 namespace App\Http\Livewire;
 
 use App\Rules\Nombre;
+use App\Models\Comuna;
 use Livewire\Component;
 use App\Models\Distrito;
 use App\Models\Provincia;
 
 class ModalNuevoRegistro extends Component
 {
-    // atributos modal
-    public $nombre;
-    public $titulo;
     public $select;
+    public $titulo;
     public $distrito;
-    public $nombre_distrito;
+    public $provincia;
+    public $comuna;
+    public $nombre;
 
-    protected $listeners = ['eventoParametrosModal'];
+    protected $listeners = [
+        'eventoParametrosModal'
+    ];
 
     // 1. parámetros necesarios para despliegue de ventana modal
     public function eventoParametrosModal($parametros)
     {
         $this->limpiarModal();
-        $this->titulo = $parametros['titulo'];
         $this->select = $parametros['select'];
+        $this->titulo = $parametros['titulo'];
         $this->distrito = $parametros['distrito'];
         $this->provincia = $parametros['provincia'];
         $this->comuna = $parametros['comuna'];
-        if($parametros['select'] === 'provincia'){
-            $this->nombre_distrito = Distrito::findOrFail($parametros['distrito'])->nombre;
-        }
     }
 
     // 2. guardar nuevo registro
@@ -46,7 +46,7 @@ class ModalNuevoRegistro extends Component
                 ]);
                 $nombre = $distrito->nombre;
                 $mensaje = 'Región '.$nombre.' añadida correctamente.';
-                $this->cargarRegistroGuardadoDistrito($distrito->id, $this->select);
+                $this->cargarDistritos($distrito->id);
                 break;
             case 'provincia':
                 $this->validate([
@@ -58,22 +58,40 @@ class ModalNuevoRegistro extends Component
                 ]);
                 $nombre = $provincia->nombre;
                 $mensaje = 'Provincia '.$nombre.' añadida correctamente.';
-                $this->cargarRegistroGuardadoProvincia($provincia->id, $this->select);
+                $this->cargarProvincias($provincia->id);
+                break;
+            case 'comuna':
+                $this->validate([
+                    'nombre' => ['required', new Nombre, 'unique:comunas,nombre'],
+                ]);
+                $comuna = Comuna::create([
+                    'nombre' => $this->nombre,
+                    'distrito_id' => $this->distrito,
+                    'provincia_id' => $this->provincia
+                ]);
+                $nombre = $comuna->nombre;
+                $mensaje = 'Comuna '.$nombre.' añadida correctamente.';
+                $this->cargarComunas($comuna->id);
                 break;                
         }
         $this->procesoFinalizado($mensaje);
     }
-    
-    // 3. cargar en select último registro almacenado distrito
-    public function cargarRegistroGuardadoDistrito($distrito_id, $select)
+
+    // eventos
+
+    public function cargarDistritos($id)
     {
-        $this->emitTo('select-normal-'.$select, 'eventoCargarRegistro', $distrito_id);
+        $this->emitTo('select-normal-distrito', 'eventoCargaNuevoDistrito', $id);  
     }
 
-    // 4. cargar en select último registro almacenado provincia
-    public function cargarRegistroGuardadoProvincia($provincia_id, $select)
+    public function cargarProvincias($id)
     {
-        $this->emitTo('select-normal-'.$select, 'eventoCargarRegistro', $provincia_id);
+        $this->emitTo('select-normal-provincia', 'eventoCargaNuevaProvincia', $id);  
+    }
+
+    public function cargarComunas($id)
+    {
+        $this->emitTo('select-normal-comuna', 'eventoCargaNuevaComuna', $id);  
     }
 
     public function procesoFinalizado($mensaje)
